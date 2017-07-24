@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <titlePhonegap Geolocation (GPS) Test</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="buttons.css" />
+    <style>
+    body {margin:0px;font-size:large;}
+    .hidden {visibility:collapse;display:none;}
+    .expose {visibility:visible;display:block;} // Here for completeness only.
+    .copyright {padding:5px;align:left;font-style:italic;font-size:small;}
+    #header {margin:0;padding:0;}
+    #exitApp {margin:0.1em;float:right;}
+    </style>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="fastclick.js"></script>
+    <script type="text/javascript" charset="utf-8" src="gpsNotepad.js"></script>
+    <script type="text/javascript">
+    // Wait for PhoneGap to load
+    document.addEventListener("deviceready", onDeviceReady, false);
+    //
+    //
+    //
+    function GPSOff() {
+        Location.clearWatch();
+    }
+    
+    function GPSClear() {
+        document.getElementById('long').innerHTML = '&nbsp;';
+        document.getElementById('lat').innerHTML  = '&nbsp;';
+        document.getElementById('accu').innerHTML = '&nbsp;';
+        document.getElementById('timestamp').innerHTML = '&nbsp;';
+    };
+    
+    function GPSonError (error) {
+        alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+    };
+    
+    function GPSonSuccess(position) {
+        document.getElementById('long').innerHTML      = position.coords.longitude;
+        document.getElementById('lat').innerHTML       = position.coords.latitude;
+        document.getElementById('speed').innerHTML     = position.coords.speed;
+        document.getElementById('heading').innerHTML   = position.coords.heading;
+        document.getElementById('accu').innerHTML      = position.coords.accuracy;
+        document.getElementById('timestamp').innerHTML = position.timestamp;
+    };
+    
+    
+    
+    function onDeviceReady() {
+        //alert('device ready');
+        if (device.platform === "iOS") {
+            //alert("got iOS");
+            // hide Exit button. They don't have one on iOS devices.
+            // http://www.mzcart.com/javascript-how-to-addremove-css-class-from-a-dom-element/
+            document.getElementById('exitApp').classList.add("hidden");
+        	/* deals with post-iOS-7 change that covers the status bar */
+        	/* http://coenraets.org/blog/2013/09/phonegap-and-cordova-with-ios-7/ */
+            document.body.style.marginTop = "20px";
+        } else if (device.platform == 'Android') {
+            // Get rid of 300ms delay 
+            document.addEventListener('DOMContentLoaded', function() { FastClick.attach(document.body); }, false);
+        }
+        GPSClear();
+        Location.init(GPSonSuccess, GPSonError);
+        Location.watchLocation();
+    }
+    
+    function onLoad() {
+        //onDeviceReady();
+    }
+
+    </script>
+</head>
+<body onload="onLoad()">
+<div id=header class="button button-block button-large">
+    <img align=left src=favicon-48x48.png>
+    Phonegap Geolocation (GPS) Test - Modificado
+</div>
+<p />&nbsp;<p />
+
+<button onclick='GPSOff()' class="button button-pill button-primary button-large" style="margin:0.1em">GPS Off</button>
+
+<button id=exitApp onclick='navigator.app.exitApp()' class="button button-pill button-primary button-large" style="margin:0.1em;float:right;">Exit</button>
+
+<div id=ax class="button button-block button-action button-large" style="margin:1em;">long <span id=long>-</span></div>
+
+<div id=ay class="button button-block button-action button-large" style="margin:1em;">lat <span id=lat>-</span></div>
+
+<div id=speeddiv class="button button-block button-action button-large" style="margin:1em;">Speed <span id=speed>-</span></div>
+
+<div id=headingdiv class="button button-block button-action button-large" style="margin:1em;">Heading <span id=heading>-</span></div>
+
+<div id=az class="button button-block button-action button-large" style="margin:1em;">accu <span id=accu>-</span></div>
+
+<div id=ts class="button button-block button-primary button-large" style="margin:1em;">TS <span id=timestamp>-</span></div>
+
+<div class="copyright" style="padding:5px;align:left;font-style:italic;font-size:small;">
+    <span id=copyright>Created by Jesus Monroy, Jr. &copy; 2015</span>
+</div>
+</body>
+</html>
