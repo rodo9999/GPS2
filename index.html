@@ -39,7 +39,7 @@
     function GPSonSuccess(position) {
         document.getElementById('long').innerHTML      = position.coords.longitude;
         document.getElementById('lat').innerHTML       = position.coords.latitude;
-        document.getElementById('speed').innerHTML     = position.coords.speed;
+        document.getElementById('speed').innerHTML     = Math.round(position.coords.speed * 1000) / 1000;
         document.getElementById('heading').innerHTML   = position.coords.heading;
         document.getElementById('accu').innerHTML      = position.coords.accuracy;
         document.getElementById('timestamp').innerHTML = position.timestamp;
